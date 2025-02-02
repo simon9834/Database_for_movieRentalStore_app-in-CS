@@ -1,0 +1,2 @@
+﻿MyDatabase mdb = new MyDatabase();
+
