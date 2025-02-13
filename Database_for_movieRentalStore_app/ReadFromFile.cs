@@ -1,7 +1,7 @@
 ﻿
     public class ReadFromFile
     {
-    public Dictionary<string, string> data { get; set; } = new Dictionary<string, string>(); 
+        public Dictionary<string, string> data { get; set; } = new Dictionary<string, string>(); 
         private List<string> whatAmIReading = new List<string>();
 
         /*data = new Dictionary<string, string>();
