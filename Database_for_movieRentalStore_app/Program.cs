@@ -6,6 +6,7 @@ var mdb = MyDatabase.Instance;
 mdb.ConnectionConfig();
 //mdb.RemoveAllTables();
 //mdb.createMainDB();
+ButtonExecution be = new ButtonExecution();
 TextHandler th = new TextHandler();
 int selectedIndex = 0;
 string[] butns = { "[ remove a rental ]", "[ add a movie ]" };
@@ -96,7 +97,7 @@ while (true)
         selectedCommand = butns[selectedIndex].Trim();
         if(selectedCommand == "[ remove a rental ]")
         {
-            Console.WriteLine(mdb.RemoveARental("atzijiduchove", "anna", "kupkova"));
+            be.delete();
         }
         break;
     }
