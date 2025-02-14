@@ -14,19 +14,42 @@ string selectedCommand;
 
 while (true)
 {
+    int btnLength = 0;
     Console.Clear();
-    spaces = th.calculateSpaces(35);
+
+    Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine();
+
+    spaces = th.calculateSpaces(36);
     //chatGPT helped here w the menu sign
     string text = spaces + "  __  __   ______   _   _   _    _  " + Environment.NewLine +
                       spaces + " |  \\/  | |  ____| | \\ | | | |  | | " + Environment.NewLine +
                       spaces + " | \\  / | | |__    |  \\| | | |  | | " + Environment.NewLine +
-                      spaces + " | |\\/| | |  __|   | . ` | | |  | |" + Environment.NewLine +
+                      spaces + " | |\\/| | |  __|   | . ` | | |  | | " + Environment.NewLine +
                       spaces + " | |  | | | |____  | |\\  | | |__| | " + Environment.NewLine +
                       spaces + " |_|  |_| |______| |_| \\_| |______| ";
-    Console.Write(text);
+    Console.WriteLine(text);
 
     Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine();
 
+    foreach (var button in butns)
+    {
+        if(btnLength != 0)
+        {
+            btnLength += 3;
+        }
+        btnLength += button.Length;
+    }
+    
+    Console.Write(th.calculateSpaces(btnLength));
 
     for (int i = 0; i < butns.Length; i++)
     {
@@ -44,7 +67,18 @@ while (true)
         Console.Write("   ");
     }
 
-    Console.WriteLine("\n\n(Choose with arrows and Enter to select)");
+    Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine();
+
+    text = "(Choose with arrows and select by clicking Enter)";
+    Console.Write(th.calculateSpaces(text.Length));
+    Console.WriteLine(text);
 
     ConsoleKeyInfo key = Console.ReadKey();
 
