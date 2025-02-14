@@ -9,7 +9,7 @@ mdb.ConnectionConfig();
 ButtonExecution be = new ButtonExecution();
 TextHandler th = new TextHandler();
 int selectedIndex = 0;
-string[] butns = { "[ remove a rental ]", "[ add a movie ]" };
+string[] butns = { "[ remove a rental ]", "[ add a movie ]", "[ insert data into DB ]" };
 string spaces = "";
 string selectedCommand;
 
@@ -95,9 +95,15 @@ while (true)
     {
         Console.Clear();
         selectedCommand = butns[selectedIndex].Trim();
-        if(selectedCommand == "[ remove a rental ]")
+        switch (selectedCommand)
         {
-            be.delete();
+            case "[ remove a rental ]":
+                be.delete();
+                break;
+            case "[ insert data into DB ]":
+                //be.                                                 //continue next time right here
+                break;
+
         }
         break;
     }
