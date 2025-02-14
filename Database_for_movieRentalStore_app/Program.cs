@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Xml.Serialization;
 using static System.Net.Mime.MediaTypeNames;
-MyDatabase mdb = new MyDatabase();
+var mdb = MyDatabase.Instance;
 mdb.ConnectionConfig();
 //mdb.RemoveAllTables();
 //mdb.createMainDB();
