@@ -63,6 +63,17 @@ public class ButtonExecution
         invoker.ExecuteCommand();
     }
 
+    public void insertCSVData()
+    {
+        try
+        {
+            ICommand usrInputCmnd = 
+        }catch(FileNotFoundException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+
     public string nullChecker(string s)
     {
         Console.Clear();
