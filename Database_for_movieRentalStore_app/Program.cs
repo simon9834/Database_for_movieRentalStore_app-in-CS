@@ -3,6 +3,9 @@ using System.Diagnostics;
 using System.Xml.Serialization;
 using static System.Net.Mime.MediaTypeNames;
 MyDatabase mdb = new MyDatabase();
+mdb.ConnectionConfig();
+//mdb.RemoveAllTables();
+//mdb.createMainDB();
 TextHandler th = new TextHandler();
 int selectedIndex = 0;
 string[] butns = { "[ remove a rental ]", "[ add a movie ]" };
@@ -59,8 +62,7 @@ while (true)
         selectedCommand = butns[selectedIndex].Trim();
         if(selectedCommand == "[ remove a rental ]")
         {
-            Console.WriteLine(mdb.RemoveARental("atzijiduchove", "Jarda", "Novak"));
-            
+            Console.WriteLine(mdb.RemoveARental("atzijiduchove", "anna", "kupkova"));
         }
         break;
     }
