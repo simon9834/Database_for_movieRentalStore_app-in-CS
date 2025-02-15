@@ -101,7 +101,7 @@ while (true)
                 be.delete();
                 break;
             case "[ insert data into DB ]":
-                //be.                                                 //continue next time right here
+                be.insertCSVData();
                 break;
 
         }
