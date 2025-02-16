@@ -52,7 +52,8 @@ public class ButtonExecution
                 try
                 {
                     Thread.Sleep(25000);
-                }catch (ThreadInterruptedException e)
+                }
+                catch (ThreadInterruptedException e)
                 {
                     Console.WriteLine(e.Message);
                 }
@@ -74,7 +75,7 @@ public class ButtonExecution
             "\nwrite here 'yourfileofcustomers.csv' of them (with .csv) and press enter, do the same for the 'yourfileofemployees.csv'.");
         filepath1 = nullChecker(Console.ReadLine(), false);
         filepath2 = nullChecker(Console.ReadLine());
-        if(!string.IsNullOrEmpty(filepath1) && !string.IsNullOrEmpty(filepath2))
+        if (!string.IsNullOrEmpty(filepath1) && !string.IsNullOrEmpty(filepath2))
         {
             ICommand csv = new CSVdata(filepath1, filepath2);
             invoker.SetCommand(csv);
@@ -84,14 +85,43 @@ public class ButtonExecution
             ICommand csv = new CSVdata();
             invoker.SetCommand(csv);
         }
-            
-            invoker.ExecuteCommand();
-        
+
+        invoker.ExecuteCommand();
+
+    }
+    public void addAnEmployee() // check for null in all those
+    {
+        string firstname;
+        string lastname;
+        string position;
+        string date;
+        Regex reg = new Regex(@"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$");
+        Console.Write("write employees first name: ");
+        firstname = Console.ReadLine();
+        Console.Write("write employees last name: ");
+        lastname = Console.ReadLine();
+        Console.Write("write employees position: ");
+        position = Console.ReadLine();
+        while (true)
+        {
+            Console.Write("write employees hire date in yyyy-mm-dd format: ");
+            if(reg.IsMatch(date = Console.ReadLine())) {
+                ICommand addemployee = new AddValue(firstname, lastname, position, date);
+
+                invoker.SetCommand(addemployee);
+                invoker.ExecuteCommand();
+                break;
+            }
+            else
+            {
+                Console.WriteLine("the date is'nt in the given format, try again");
+            }
+        }
     }
 
     public string nullChecker(string s, bool clear = true)
     {
-        if(clear) Console.Clear();
+        if (clear) Console.Clear();
         if (string.Equals(s.Trim().ToLower(), "none"))
         {
             return "";

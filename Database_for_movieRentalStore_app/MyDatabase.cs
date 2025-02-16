@@ -199,4 +199,35 @@ public class MyDatabase
         }
         return "Employees and Customers inserted";
     }
+    public void AddAnEmployee(string firstname, string lastname, string position, string hiredate)
+    {
+        string query = "INSERT INTO Employees (FirstName, LastName, Position, HireDate) " +
+                                   "VALUES (@FirstName, @LastName, @Position, @HireDate)";
+        using (SqlCommand command = new SqlCommand(query, OpenConnection()))
+        {
+            command.Parameters.AddWithValue("@FirstName", firstname);
+            command.Parameters.AddWithValue("@LastName", lastname);
+            command.Parameters.AddWithValue("@Position", position);
+            command.Parameters.AddWithValue("@HireDate", DateTime.Parse(hiredate));
+            command.ExecuteNonQuery();
+            CloseConnection();
+        }
+        Console.WriteLine("employee added");
+    }
+    public void AddAMovie(string title, string genre, string releaseyear, float rating, string stockquantity)
+    {
+        string query = "INSERT INTO Movies (Title, Genre, ReleaseYear, Rating, StockQuantity) " +
+                                   "VALUES (@Title, @Genre, @ReleaseYear, @Rating, @StockQuantity)";
+        using (SqlCommand command = new SqlCommand(query, OpenConnection()))
+        {
+            command.Parameters.AddWithValue("@Title", title);
+            command.Parameters.AddWithValue("@Genre", genre);
+            command.Parameters.AddWithValue("@ReleaseYear", DateTime.Parse(releaseyear));
+            command.Parameters.AddWithValue("@Rating", rating);
+            command.Parameters.AddWithValue("@StockQuantity", stockquantity);
+            command.ExecuteNonQuery();
+            CloseConnection();
+        }
+        Console.WriteLine("movie added");
+    }
 }

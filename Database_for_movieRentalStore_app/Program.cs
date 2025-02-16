@@ -9,7 +9,7 @@ mdb.ConnectionConfig();
 ButtonExecution be = new ButtonExecution();
 TextHandler th = new TextHandler();
 int selectedIndex = 0;
-string[] butns = { "[ remove a rental ]", "[ add a movie ]", "[ insert data into DB ]" };
+string[] butns = { "[ remove a rental ]", "[ add an employee ]", "[ add a movie ]", "[ insert data into DB ]" };
 string spaces = "";
 string selectedCommand;
 
@@ -103,7 +103,9 @@ while (true)
             case "[ insert data into DB ]":
                 be.insertCSVData();
                 break;
-
+            case "[ add an employee ]":
+                be.addAnEmployee();
+                    break;
         }
         break;
     }
