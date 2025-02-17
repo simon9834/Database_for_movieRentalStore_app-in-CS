@@ -9,9 +9,10 @@ public class CmndInvoker
         _command = command;
     }
 
-    public void ExecuteCommand()
+    public void ExecuteCommand(bool sw = true)
     {
-        _command.Execute();
+        if(sw) _command.Execute();
+        if(!sw) _command.Execute1();
     }
 }
 

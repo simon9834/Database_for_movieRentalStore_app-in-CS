@@ -24,5 +24,9 @@ public class CSVdata : ICommand
         }
         Console.WriteLine(_outpt);
     }
+
+    public void Execute1()
+    {
+    }
 }
 

@@ -106,6 +106,9 @@ while (true)
             case "[ add an employee ]":
                 be.addAnEmployee();
                     break;
+            case "[ add a movie ]":
+                be.addAMovie();
+                break;
         }
         break;
     }

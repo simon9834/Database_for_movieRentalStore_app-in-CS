@@ -20,5 +20,10 @@
         _outpt = mdb.RemoveARental(_movieName, _firstName, _lastName, _email);
         Console.WriteLine(_outpt);
     }
+
+    public void Execute1()
+    {
+
+    }
 }
 
