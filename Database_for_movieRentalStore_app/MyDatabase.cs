@@ -1,11 +1,7 @@
-﻿using LamarCodeGeneration.Util.TextWriting;
-using System;
-using System.ComponentModel;
-using System.Data;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.Numerics;
-
+﻿using System.Data.SqlClient;
+/// <summary>
+/// a class that works as a gate to my actuall database (uses singleton pattern for safety)
+/// </summary>
 public class MyDatabase
 {
     private string name;
@@ -14,6 +10,9 @@ public class MyDatabase
     private string srvr_num;
     private SqlConnection _connection;
     private static readonly Lazy<MyDatabase> _instance = new Lazy<MyDatabase>(() => new MyDatabase());
+    /// <summary>
+    /// constructor of the class setting the basic values for a db connection
+    /// </summary>
     private MyDatabase()
     {
         ReadFromFile rff = new ReadFromFile();
@@ -22,7 +21,13 @@ public class MyDatabase
         password = rff.data["heslo"];
         srvr_num = rff.data["cislo serveru"];
     }
+    /// <summary>
+    /// singleton of my db
+    /// </summary>
     public static MyDatabase Instance => _instance.Value;
+    /// <summary>
+    /// method that sets all the data needed to connect to the db
+    /// </summary>
     public void ConnectionConfig()
     {
         var consStringBuilder = new SqlConnectionStringBuilder();
@@ -33,7 +38,10 @@ public class MyDatabase
         /*consStringBuilder.ConnectTimeout = 30;*/
         _connection = new SqlConnection(consStringBuilder.ConnectionString);
     }
-    //check metoda od chatGPT
+    /// <summary>
+    /// a method that opens the connection to the database
+    /// </summary>
+    /// <returns></returns>
     private SqlConnection OpenConnection()
     {
         if (_connection.State == System.Data.ConnectionState.Closed)
@@ -42,6 +50,9 @@ public class MyDatabase
         }
         return _connection;
     }
+    /// <summary>
+    /// a method that closes a connection to the db
+    /// </summary>
     private void CloseConnection()
     {
         if (_connection.State == System.Data.ConnectionState.Open)
@@ -49,7 +60,9 @@ public class MyDatabase
             _connection.Close();
         }
     }
-
+    /// <summary>
+    /// a method to remove all tables and all possible values in them, in the right order
+    /// </summary>
     public void RemoveAllTables()
     {
         try
@@ -66,12 +79,15 @@ public class MyDatabase
             Console.WriteLine(e.Message);
         }
     }
+    /// <summary>
+    /// a method that creates the all the tables inside a db and adds all attributes
+    /// </summary>
     public void createMainDB()
     {
         try
         {
             //the query is written by chatGPT
-            string queryCreateDb_W_Tbls = "CREATE TABLE Customers ( CustomerID INT PRIMARY KEY IDENTITY(1,1), FirstName VARCHAR(50) NOT NULL, LastName VARCHAR(50) NOT NULL, Email VARCHAR(100) UNIQUE NOT NULL, Phone VARCHAR(15), Address TEXT, RegistrationDate DATE DEFAULT GETDATE() ); CREATE TABLE Movies ( MovieID INT PRIMARY KEY IDENTITY(1,1), Title VARCHAR(255) NOT NULL, Genre VARCHAR(50), ReleaseYear INT, Rating FLOAT, StockQuantity INT DEFAULT 0 ); CREATE TABLE Employees ( EmployeeID INT PRIMARY KEY IDENTITY(1,1), FirstName VARCHAR(50) NOT NULL, LastName VARCHAR(50) NOT NULL, Position VARCHAR(50), HireDate DATE DEFAULT GETDATE() ); CREATE TABLE Rentals ( RentalID INT PRIMARY KEY IDENTITY(1,1), CustomerID INT, EmployeeID INT, RentalDate DATETIME DEFAULT GETDATE(), ReturnDate DATETIME, Status VARCHAR(10) DEFAULT 'Active', FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID) ON DELETE CASCADE, FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID) ON DELETE SET NULL ); CREATE TABLE RentalDetails ( RentalID INT, MovieID INT, Quantity FLOAT DEFAULT 1, PRIMARY KEY (RentalID, MovieID), FOREIGN KEY (RentalID) REFERENCES Rentals(RentalID) ON DELETE CASCADE, FOREIGN KEY (MovieID) REFERENCES Movies(MovieID) ON DELETE CASCADE ); CREATE TABLE Payments ( PaymentID INT PRIMARY KEY IDENTITY(1,1), RentalID INT UNIQUE, Amount DECIMAL(10,2) NOT NULL, PaymentDate DATETIME DEFAULT GETDATE(), PaymentMethod VARCHAR(20) DEFAULT 'Cash', IsRefunded BIT DEFAULT 0, FOREIGN KEY (RentalID) REFERENCES Rentals(RentalID) ON DELETE CASCADE );";
+            string queryCreateDb_W_Tbls = "CREATE TABLE Customers ( CustomerID INT PRIMARY KEY IDENTITY(1,1), FirstName VARCHAR(50) NOT NULL, LastName VARCHAR(50) NOT NULL, Email VARCHAR(100) UNIQUE NOT NULL, Phone VARCHAR(15), Address TEXT, RegistrationDate DATE DEFAULT GETDATE() ); CREATE TABLE Movies ( MovieID INT PRIMARY KEY IDENTITY(1,1), Title VARCHAR(255) NOT NULL UNIQUE, Genre VARCHAR(50), ReleaseYear INT, Rating FLOAT, StockQuantity INT DEFAULT 0 ); CREATE TABLE Employees ( EmployeeID INT PRIMARY KEY IDENTITY(1,1), FirstName VARCHAR(50) NOT NULL, LastName VARCHAR(50) NOT NULL, Position VARCHAR(50), HireDate DATE DEFAULT GETDATE() ); CREATE TABLE Rentals ( RentalID INT PRIMARY KEY IDENTITY(1,1), CustomerID INT, EmployeeID INT, RentalDate DATETIME DEFAULT GETDATE(), ReturnDate DATETIME, Status VARCHAR(10) DEFAULT 'Active', FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID) ON DELETE CASCADE, FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID) ON DELETE SET NULL ); CREATE TABLE RentalDetails ( RentalID INT, MovieID INT, Quantity FLOAT DEFAULT 1, PRIMARY KEY (RentalID, MovieID), FOREIGN KEY (RentalID) REFERENCES Rentals(RentalID) ON DELETE CASCADE, FOREIGN KEY (MovieID) REFERENCES Movies(MovieID) ON DELETE CASCADE ); CREATE TABLE Payments ( PaymentID INT PRIMARY KEY IDENTITY(1,1), RentalID INT UNIQUE, Amount DECIMAL(10,2) NOT NULL, PaymentDate DATETIME DEFAULT GETDATE(), PaymentMethod VARCHAR(20) DEFAULT 'Cash', IsRefunded BIT DEFAULT 0, FOREIGN KEY (RentalID) REFERENCES Rentals(RentalID) ON DELETE CASCADE );";
             SqlCommand command1 = new SqlCommand(queryCreateDb_W_Tbls, OpenConnection());
             command1.ExecuteNonQuery();
             Console.WriteLine("The database was succesfully built");
@@ -82,11 +98,19 @@ public class MyDatabase
             Console.WriteLine(e.Message);
         }
     }
+    /// <summary>
+    /// a method that removes a rental from the table of rentals (if exists)
+    /// </summary>
+    /// <param name="movieName"></param>
+    /// <param name="cstmrFiName"></param>
+    /// <param name="cstmrLaName"></param>
+    /// <param name="email"></param>
+    /// <returns></returns>
     public string RemoveARental(string movieName, string? cstmrFiName = null, string? cstmrLaName = null, string? email = null)
     {
         try
         {
-            string query = "DELETE FROM Rentals WHERE RentalID IN (SELECT RentalID FROM RentalDetails WHERE MovieID IN (SELECT MovieID FROM Movies WHERE title = @title)) AND" +
+            string query = "DELETE FROM Rentals WHERE RentalID IN (SELECT RentalID FROM RentalDetails WHERE MovieID IN (SELECT Movies.MovieID FROM Movies WHERE Title = @Title)) AND" +
             " CustomerID IN (SELECT CustomerID FROM Customers WHERE 1=1";
 
             //sql injection protection
@@ -111,9 +135,7 @@ public class MyDatabase
                 query += " AND Email = @Email";
                 parameters.Add(new SqlParameter("@Email", email));
             }
-
             query += ");";
-
             using (SqlCommand command = new SqlCommand(query, OpenConnection()))
             {
                 foreach (var param in parameters)
@@ -122,7 +144,7 @@ public class MyDatabase
                 }
                 int rowsAffected = command.ExecuteNonQuery();
                 CloseConnection();
-                return $"{rowsAffected} rentals deleted!";
+                return $"{rowsAffected} rentals deleted.";
             }
         }
         catch (Exception e)
@@ -130,6 +152,12 @@ public class MyDatabase
             return e.Message;
         }
     }
+    /// <summary>
+    /// a method to insert csv data into the database
+    /// </summary>
+    /// <param name="customersCSV"></param>
+    /// <param name="employeesCSV"></param>
+    /// <returns></returns>
     public string insertCSV(string? customersCSV = "customers.csv", string? employeesCSV = "employees.csv")
     {
         string line;
@@ -163,9 +191,9 @@ public class MyDatabase
                 }
             }
         }
-        catch (FileNotFoundException e)
+        catch (Exception e)
         {
-            Console.WriteLine(e.Message, "customers weren't inserted");
+            Console.WriteLine(e.Message, "\ncustomers weren't inserted\n");
         }
         try
         {
@@ -193,12 +221,20 @@ public class MyDatabase
                     }
                 }
             }
-        }catch (FileNotFoundException e)
-        {
-            Console.WriteLine(e.Message, "employees weren't inserted");
         }
-        return "Employees and Customers inserted";
+        catch (FileNotFoundException e)
+        {
+            Console.WriteLine(e.Message, "\ncustomers weren't inserted\n");
+        }
+        return "Employees and Customers inserted.";
     }
+    /// <summary>
+    /// a method that adds an employee to the table of employees
+    /// </summary>
+    /// <param name="firstname"></param>
+    /// <param name="lastname"></param>
+    /// <param name="position"></param>
+    /// <param name="hiredate"></param>
     public void AddAnEmployee(string firstname, string lastname, string position, string hiredate)
     {
         string query = "INSERT INTO Employees (FirstName, LastName, Position, HireDate) " +
@@ -212,8 +248,16 @@ public class MyDatabase
             command.ExecuteNonQuery();
             CloseConnection();
         }
-        Console.WriteLine("employee added");
+        Console.WriteLine("Employee added.");
     }
+    /// <summary>
+    /// a method that adds a movie to the table of movies
+    /// </summary>
+    /// <param name="title"></param>
+    /// <param name="genre"></param>
+    /// <param name="releaseyear"></param>
+    /// <param name="rating"></param>
+    /// <param name="stockquantity"></param>
     public void AddAMovie(string title, string genre, int releaseyear, float? rating, int stockquantity)
     {
         string query = "INSERT INTO Movies (Title, Genre, ReleaseYear, Rating, StockQuantity) " +
@@ -228,6 +272,26 @@ public class MyDatabase
             command.ExecuteNonQuery();
             CloseConnection();
         }
-        Console.WriteLine("movie added");
+        Console.WriteLine("Movie added.");
+    }
+    /// <summary>
+    /// a method that can change the quantity of a film in shop
+    /// </summary>
+    /// <param name="movie_title"></param>
+    /// <param name="newQuantity"></param>
+    public void updtMovieQuantity(string movie_title, int newQuantity)
+    {
+        string query = "UPDATE Movies " +
+                       "SET StockQuantity = @NewQuantity " +
+                       "WHERE Title = @MovieTitle";
+
+        using (SqlCommand command = new SqlCommand(query, OpenConnection()))
+        {
+            command.Parameters.AddWithValue("@NewQuantity", newQuantity);
+            command.Parameters.AddWithValue("@MovieTitle", movie_title);
+            command.ExecuteNonQuery();
+
+            Console.WriteLine("Movie quantity updated successfully.");
+        }
     }
 }

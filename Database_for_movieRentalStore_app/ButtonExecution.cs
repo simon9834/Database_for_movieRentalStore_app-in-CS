@@ -1,11 +1,13 @@
-﻿
-
-using System.Text.RegularExpressions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
+﻿using System.Text.RegularExpressions;
+/// <summary>
+/// class that gets all needed data from the user after clicking on a button and calls invoker
+/// </summary>
 public class ButtonExecution
 {
     private CmndInvoker invoker = new CmndInvoker();
+    /// <summary>
+    /// a method that gets the needed data from user for deletion of some data
+    /// </summary>
     public void delete()
     {
         Console.Clear();
@@ -60,7 +62,33 @@ public class ButtonExecution
         invoker.SetCommand(usrInptCommand);
         invoker.ExecuteCommand();
     }
-
+    /// <summary>
+    /// a method that gets the needed data from user for updating the quantity of some atribute
+    /// </summary>
+    public void updateQuantity()
+    {
+        string movie_title;
+        Console.Write("write the movie title: ");
+        movie_title = nullChecker(Console.ReadLine());
+        int quantity = 0;
+        while (true)
+        {
+            Console.Write("write the new quantity (numerical): ");
+            if (int.TryParse(Console.ReadLine(), out int res))
+            {
+                quantity = res;
+                Console.Clear();
+                break;
+            }
+        }
+        
+        ICommand updateQuantity = new UpdateQ(movie_title, quantity);
+        invoker.SetCommand(updateQuantity);
+        invoker.ExecuteCommand();
+    }
+    /// <summary>
+    /// a method that gets the needed data from user for importing data from csv to employees and custonmers
+    /// </summary>
     public void insertCSVData()
     {
         Console.WriteLine("You can insert you'r file of customers.csv and employees.csv into the bin/debug/net8.0 file," +
@@ -70,6 +98,7 @@ public class ButtonExecution
             "\nwrite here 'yourfileofcustomers.csv' of them (with .csv) and press enter, do the same for the 'yourfileofemployees.csv'.\n\n");
         Console.Write("name of you'r customers file csv: ");
         string filepath1 = nullChecker(Console.ReadLine().Trim(), false);
+        Console.WriteLine();
         Console.Write("name of you'r employees file csv: ");
         string filepath2 = nullChecker(Console.ReadLine().Trim());
         if (!string.IsNullOrEmpty(filepath1) && !string.IsNullOrEmpty(filepath2))
@@ -86,7 +115,10 @@ public class ButtonExecution
         invoker.ExecuteCommand();
 
     }
-    public void addAnEmployee() // check for null in all those
+    /// <summary>
+    /// a method that gets the needed data from user for adding an employee to the db
+    /// </summary>
+    public void addAnEmployee()
     {
         string firstname;
         string lastname;
@@ -103,7 +135,8 @@ public class ButtonExecution
         {
             Console.Write("write employees hire date in yyyy-mm-dd format or write 'none' if he's not employed: ");
             date = nullChecker(Console.ReadLine().Trim());
-            if(reg.IsMatch(date) || string.Equals(date, "")) {
+            if (reg.IsMatch(date) || string.Equals(date, ""))
+            {
                 ICommand addemployee = new AddValue(firstname, lastname, position, date);
                 invoker.SetCommand(addemployee);
                 invoker.ExecuteCommand();
@@ -115,6 +148,9 @@ public class ButtonExecution
             }
         }
     }
+    /// <summary>
+    /// a method that gets the needed data from user for adding a film to the db
+    /// </summary>
     public void addAMovie()
     {
         string title;
@@ -124,11 +160,11 @@ public class ButtonExecution
         int stockQuantity;
         while (true)
         {
-        Console.Write("write movies title: ");
-        title = nullChecker(Console.ReadLine());
+            Console.Write("write movies title: ");
+            title = nullChecker(Console.ReadLine());
             if (title == "") continue;
-        Console.Write("write movies genre or write 'none' if you don't know it: ");
-        genre = nullChecker(Console.ReadLine().Trim());
+            Console.Write("write movies genre or write 'none' if you don't know it: ");
+            genre = nullChecker(Console.ReadLine().Trim());
             while (true)
             {
                 Console.Write("write movies release year (in numerical): ");
@@ -151,7 +187,7 @@ public class ButtonExecution
                 }
                 else
                 {
-                    if(smth == "none")
+                    if (smth == "none")
                     {
                         rating = null;
                         Console.Clear();
@@ -175,7 +211,12 @@ public class ButtonExecution
             break;
         }
     }
-
+    /// <summary>
+    /// a method that works as a checker if the user does know what to put in or doesnt and based on that returns specific data
+    /// </summary>
+    /// <param name="s"> users input </param>
+    /// <param name="clear"> bool thats being checked, if true, it should clear the console </param>
+    /// <returns></returns>
     public string nullChecker(string s, bool clear = true)
     {
         if (clear) Console.Clear();

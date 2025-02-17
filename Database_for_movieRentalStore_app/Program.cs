@@ -1,11 +1,11 @@
-var mdb = MyDatabase.Instance;
+﻿var mdb = MyDatabase.Instance;
 mdb.ConnectionConfig();
 //mdb.RemoveAllTables();
 //mdb.createMainDB();
 ButtonExecution be = new ButtonExecution();
 TextHandler th = new TextHandler();
 int selectedIndex = 0;
-string[] butns = { "[ remove a rental ]", "[ add an employee ]", "[ add a movie ]", "[ insert data into DB ]" };
+string[] butns = { "[ remove a rental ]", "[ add an employee ]", "[ add a movie ]", "[ insert data into DB ]", "[ update movies quantity ]" };
 string spaces = "";
 string selectedCommand;
 
@@ -105,7 +105,16 @@ while (true)
             case "[ add a movie ]":
                 be.addAMovie();
                 break;
+            case "[ update movies quantity ]":
+                be.updateQuantity();
+                break;
         }
-        break;
+        try
+        {
+            Thread.Sleep(2500);
+        }catch(ThreadInterruptedException e)
+        {
+            Console.WriteLine("how bro?");
+        }
     }
 }
