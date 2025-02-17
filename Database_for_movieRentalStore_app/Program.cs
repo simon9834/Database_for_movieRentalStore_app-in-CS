@@ -1,7 +1,3 @@
-﻿using System;
-using System.Diagnostics;
-using System.Xml.Serialization;
-using static System.Net.Mime.MediaTypeNames;
 var mdb = MyDatabase.Instance;
 mdb.ConnectionConfig();
 //mdb.RemoveAllTables();
