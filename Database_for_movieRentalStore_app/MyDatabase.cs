@@ -34,7 +34,7 @@ public class MyDatabase
         var consStringBuilder = new SqlConnectionStringBuilder();
         consStringBuilder.UserID = name; //prihlasovaci jmeno
         consStringBuilder.Password = password; //heslo
-        consStringBuilder.InitialCatalog = databaseName; //jmeno databaze
+        consStringBuilder.InitialCatalog = "master"; //jmeno databaze
         consStringBuilder.DataSource = srvr_num; //cislo serveru (popr. skolniho pc)
         /*consStringBuilder.ConnectTimeout = 30;*/
         _connection = new SqlConnection(consStringBuilder.ConnectionString);
@@ -64,13 +64,13 @@ public class MyDatabase
     /// <summary>
     /// a method to remove all tables and all possible values in them, in the right order
     /// </summary>
-    public void RemoveAllTables()
+    public void RemoveAllTablesAndDb()
     {
         try
         {
             Console.WriteLine("Connection succesfull");
             //the query is written by chatGPT
-            string query = $"DECLARE @sql NVARCHAR(MAX) = N'';\r\n\r\nSELECT @sql += 'ALTER TABLE ' + QUOTENAME(OBJECT_SCHEMA_NAME(parent_object_id)) + '.' +\r\n               QUOTENAME(OBJECT_NAME(parent_object_id)) + \r\n               ' DROP CONSTRAINT ' + QUOTENAME(name) + '; ' \r\nFROM sys.foreign_keys;\r\n\r\nPRINT @sql; -- Optional: Print the statements for debugging\r\nEXEC sp_executesql @sql;\r\n\r\n-- Reset the SQL variable\r\nSET @sql = N'';\r\n\r\n-- Step 2: Drop all Tables\r\nSELECT @sql += 'DROP TABLE ' + QUOTENAME(OBJECT_SCHEMA_NAME(object_id)) + '.' + QUOTENAME(name) + '; ' \r\nFROM sys.tables;\r\n\r\nPRINT @sql; -- Optional: Print the statements for debugging\r\nEXEC sp_executesql @sql;";
+            string query = $"DECLARE @dbName NVARCHAR(255);\r\nDECLARE @sql NVARCHAR(MAX);\r\n\r\nDECLARE db_cursor CURSOR FOR\r\nSELECT name FROM sys.databases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb');\r\n\r\nOPEN db_cursor;\r\nFETCH NEXT FROM db_cursor INTO @dbName;\r\n\r\nWHILE @@FETCH_STATUS = 0\r\nBEGIN\r\n    SET @sql = N'USE ' + QUOTENAME(@dbName) + N'; ';\r\n\r\n    -- Drop all foreign key constraints\r\n    SELECT @sql += 'ALTER TABLE ' + QUOTENAME(OBJECT_SCHEMA_NAME(parent_object_id)) + '.' + \r\n                   QUOTENAME(OBJECT_NAME(parent_object_id)) + \r\n                   ' DROP CONSTRAINT ' + QUOTENAME(name) + '; ' \r\n    FROM sys.foreign_keys;\r\n\r\n    PRINT @sql;\r\n    EXEC sp_executesql @sql;\r\n\r\n    -- Drop all tables\r\n    SET @sql = N'USE ' + QUOTENAME(@dbName) + N'; ';\r\n    SELECT @sql += 'DROP TABLE ' + QUOTENAME(OBJECT_SCHEMA_NAME(object_id)) + '.' + QUOTENAME(name) + '; ' \r\n    FROM sys.tables;\r\n\r\n    PRINT @sql;\r\n    EXEC sp_executesql @sql;\r\n\r\n    -- Drop the database\r\n    SET @sql = N'DROP DATABASE ' + QUOTENAME(@dbName) + ';';\r\n    PRINT @sql;\r\n    EXEC sp_executesql @sql;\r\n\r\n    FETCH NEXT FROM db_cursor INTO @dbName;\r\nEND\r\n\r\nCLOSE db_cursor;\r\nDEALLOCATE db_cursor;\r\n";
             SqlCommand command = new SqlCommand(query, OpenConnection());
             command.ExecuteNonQuery();
             CloseConnection();

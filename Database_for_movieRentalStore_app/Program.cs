@@ -1,6 +1,6 @@
 ﻿var mdb = MyDatabase.Instance;
 mdb.ConnectionConfig();
-//mdb.RemoveAllTables();
+//mdb.RemoveAllTablesAndDb();
 //mdb.createMainDB();
 ButtonExecution be = new ButtonExecution();
 TextHandler th = new TextHandler();
