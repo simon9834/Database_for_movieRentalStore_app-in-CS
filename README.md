@@ -1,6 +1,5 @@
 
 # Movie rental store DB
-<hr>
 
 ## Usage
  - [delete old tables and create new ones for the DB](#New-DB)
