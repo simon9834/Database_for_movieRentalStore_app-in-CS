@@ -1,3 +1,4 @@
+
 # Movie rental store DB
 
 ## Usage
@@ -5,5 +6,5 @@
  - [rules](#rules)
 
 ### <a name="New-DB"></a>New DB
- - for creating a new DB and deleting everything in the old one, uncomment thrid and fourth line in the class *program.cs*
+ - for creating a new DB and deleting everything in the old one, uncomment thrid and fourth line in the class <strong>program.cs</strong>
 
