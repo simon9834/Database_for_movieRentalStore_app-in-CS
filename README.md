@@ -19,4 +19,4 @@
 
 
  ### <a name="rules"></a>Rules
-> - Follow what the commands say and when *finish a task* click enter to confirm it
+> - Follow what the commands say and after *finishing a task*, click enter to confirm it
