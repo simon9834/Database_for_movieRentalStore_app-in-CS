@@ -7,11 +7,11 @@
  - [rules](#rules)
 
 
- ### <a name="start"></a>Before Start
+### <a name="start"></a>Before Start
  - #### Before you run the code, change everything listed here, in the Database_for_movieRentalStore_app\bin\Debug\net8.0\prihlas_udaj.txt.
->    - Change the <strong>PC_Here</strong> to your actuall PC number. Example: PC123.
->    - Change the <strong>Name</strong> to your actuall name you use to sing-in in school.
->    - Change the <strong>Password</strong> to your actuall password you use to sing-in in school.
+>     - Change the <strong>PC_Here</strong> to your actuall PC number. Example: PC123.
+>     - Change the <strong>Name</strong> to your actuall name you use to sing-in in school.
+>     - Change the <strong>Password</strong> to your actuall password you use to sing-in in school.
 
 
  ### <a name="New-DB"></a>New DB
