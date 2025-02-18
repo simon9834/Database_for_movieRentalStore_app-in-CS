@@ -1,4 +1,4 @@
-#Movie rental store DB
+# Movie rental store DB
 
-##Usage
+## Usage
  - delete old tables and create new
