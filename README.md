@@ -15,7 +15,8 @@
 
 
  ### <a name="New-DB"></a>New DB
->     - For creating a new DB and deleting everything in the old one, uncomment thrid and fourth line in the class <strong>program.cs</strong>
+>     - For creating a new DB and deleting everything in the old one,
+>       uncomment thrid and fourth line in the class <strong>program.cs</strong>
 
 
  ### <a name="rules"></a>Rules
