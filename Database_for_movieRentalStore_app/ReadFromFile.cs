@@ -10,6 +10,7 @@ public class ReadFromFile
     /// </summary>
     private void FillList()
     {
+        whatAmIReading.Add("database name");
         whatAmIReading.Add("jmeno");
         whatAmIReading.Add("heslo");
         whatAmIReading.Add("cislo serveru");
